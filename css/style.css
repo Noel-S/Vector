@@ -1,7 +1,4 @@
-canvas {
-  padding-left: 300px;
-  padding-top: -500px;
-}
+
 .button {
   display: inline-block;
   margin: 0.3em;
@@ -87,4 +84,7 @@ td{
 .matrix:after {
     right: -6px;
     border-left: 0;
+}
+#canvas{
+  margin-top: 10px;
 }
