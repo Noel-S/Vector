@@ -45,37 +45,39 @@
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="addVector();">Añadir</a>
         </div>
       </div>
-    <!--
-      <nav>
-        <div class="nav-wrapper blue">
-          <ul id="nav-mobile" class="left hide-on-med-and-down">
-
-          	<a href="#" data-activates="slide-out" class="btn-flat"><i class="material-icons">menu</i></a>
-          </ul>
-          <a href="#" class="brand-logo">
-            Vectores
-            <img src="../public/icon.png">
-          </a>
-        </div>
-      </nav>-->
-
       <!--Lista de vectores-->
       <div class="row">
         <div class="col s2">
           <ul id="vectores" class="collection">
-            <li class="collection-item active"><div>Vectores<a class="secondary-content modal-trigger waves-effect" href="#modal1"><i class="material-icons">add</i></a><div></li>
+            <li class="collection-item active"><div>Vectores<a class="secondary-content modal-trigger waves-effect" href="#modal1"><i class="material-icons">add_circle</i></a><div></li>
             <li><div class="divider"></div></li>
           </ul>
+          
+          <!--Lista de operaciones-->
+          <div class="col s12" style="text-align: center;">
+            <h5>Operaciones</h5>
+            <a class="btn-floating red tooltipped" data-position="right" data-delay="50" data-tooltip="Suma" id="+" onclick="addToOperacion(this.id);"><i class="material-icons">add</i></a>
+            <a class="btn-floating red tooltipped" data-position="right" data-delay="50" data-tooltip="Resta" id="–" onclick="addToOperacion(this.id);"><i class="material-icons">remove</i></a>
+            <a class="btn-floating red tooltipped" data-position="right" data-delay="50" data-tooltip="Producto punto" id="•" onclick="addToOperacion(this.id);"><i class="material-icons md-18">brightness_1</i></a>
+             <a class="btn-floating red tooltipped" data-position="right" data-delay="50" data-tooltip="Producto cruz" id="✖" onclick="addToOperacion(this.id);"><i class="material-icons">clear</i></a>
+            <a class="btn-floating red tooltipped" data-position="right" data-delay="50" data-tooltip="Norma" id="| |" onclick="addToOperacion(this.id);"><i class="material-icons">pause</i></a>
+            <button class="btn-floating waves-effect light-blue tooltipped" data-position="right" data-delay="50" data-tooltip="Refrescar" type="submit" onclick="refresh();"><i class="material-icons">cached</i></button>
+            <a class="btn-floating teal tooltipped disabled" data-position="right" data-delay="50" data-tooltip="Vista" id="plano" onclick="showPlane();center();"><i class="material-icons">visibility</i></a>
+          </div>
+        
         </div>
         <!--Operación-->
-        <div id="" class="col s8">
+        <div id="proced" class="col s8" style="display: block;">
           <h4>Operación</h4>
 
           <div id="chips" class="chips chips-initial">
 
           </div>
-          <div>
-            <button class="btn-floating waves-effect light-blue offset-s10" id="resolver" onclick="resolver();"><i class="material-icons">drag_handle</i></button>
+          <div class="col s1">
+            <button class="btn-floating waves-effect light-blue" id="resolver" onclick="resolver();"><i class="material-icons">drag_handle</i></button>
+          </div>
+          <div class="col s6">
+            <button class="waves-effect btn light-blue" id="res" onclick="addRes();" style="display: none;">Añadir resultante</button>
           </div>
           <div>
             <h5 style="color: white;">1</h5>
@@ -87,31 +89,15 @@
             <br><br/>
             <h5 id="procedimiento"></h5>
           </div>
-            <!--canvas height="300px" width="300px" id="micanvas">
-              Su navegador no soporta en elemento CANVAS
-
-            </canvas-->
-          </div>
         </div>
-        <div class="col s2">
-          <!--Lista de operaciones-->
-          <div class="col s12">
-            <div class="fixed-action-btn vertical click-to-toggle">
-              <a class="btn-floating btn-large red">
-                <i class="material-icons">menu</i>
-              </a>
-              <ul>
-                <li><a class="btn-floating red" id="+" onclick="addToOperacion(this.id);"><i class="material-icons">add</i></a></li>
-                <li><a class="btn-floating red" id="–" onclick="addToOperacion(this.id);"><i class="material-icons">remove</i></a></li>
-                <li><a class="btn-floating red" id="•" onclick="addToOperacion(this.id);"><i class="material-icons md-18">brightness_1</i></a></li>
-                <li><a class="btn-floating red" id="✖" onclick="addToOperacion(this.id);"><i class="material-icons">clear</i></a></li>
-                <li><a class="btn-floating red" id="| |" onclick="addToOperacion(this.id);"><i class="material-icons">pause</i></a></li>
-                <li><button class="btn-floating waves-effect light-blue" type="submit" onclick="refresh();"><i class="material-icons">cached</i></button></li>
-              </ul>
-            </div>
+        <div id="canvas" class="col s10" style="text-align: center; display: none;">
+          <div class="fixed-action-btn">
+            <a class="btn-floating cyan accent-4" id="zoomIN" onclick="zoomIN();"><i class="material-icons">add</i></a>
+            <a class="btn-floating cyan accent-4" id="zoomOUT" onclick="zoomOUT()"><i class="material-icons">remove</i></a>
           </div>
         </div>
       </div>
+        
 
     <script src="js/vendor/jquery.js" charset="utf-8">window.jQuery = window.$ = jQuery;</script>
 
@@ -119,6 +105,9 @@
     <script>if (window.module) module = window.module;</script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/p5.js"></script>
+    <script type="text/javascript" src="js/sketch.js"></script>
+    <!--script type="text/javascript" src="js/main.js"></script-->
   	<script type="text/javascript">
       $(document).ready(function(){
         // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
