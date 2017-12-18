@@ -4,30 +4,41 @@ class vector {
     this.x=x;
     this.y=y;
     this.z=z;
+
+    x=x*30;
+    y=y*-30;
+    this.X=540+x;
+    this.Y=300+y;
+    this.angle = atan2(this.y,this.x);
+  }
+
+  show(){
+    let s;
+    if (this.nom=='r') {
+      stroke('red');
+      fill('red');
+    }else{
+      stroke(0);
+      fill(0);
+    }
+    push();
+    strokeWeight(2);
+    line(540, 300, this.X, this.Y);
+    //ellipse(this.c,this.c,5,5);
+    translate(this.X,this.Y);
+    textSize(16);
+    text(this.nom+" ("+this.x+", "+this.y+")",10,30);
+    rotate(-this.angle + HALF_PI);
+    strokeWeight(1);
+    triangle(-5, 20, 5, 20, 0, 0);
+    pop();
   }
 }
 
-//for (let x=0; x<=300; x=x+20){
-//  ctx.moveTo(x,0);
-//  ctx.lineTo(x,300);
-//}
-//for (let y=0; y<=300; y=y+20){
-//  ctx.moveTo(0,y);
-//  ctx.lineTo(300,y);
-//}
-//ctx.strokeStyle = "#cccccc";
-//ctx.stroke();
-
-function drawVector(x,y) {
-//  var can = document.getElementById("micanvas");
-//  var c = can.getContext("2d");
-//  c.moveTo(0,300);
-//  c.lineTo((x*20),(300-(y*20)));
-//  c.strokeStyle = "#000000";
-//  c.stroke();
-}
-
+var resultado = false;
+var r;
 var vectores=[];
+var IDS=[];
 
 function addVector(){
     let nom = document.getElementById('nom').value;
@@ -43,8 +54,8 @@ function addVector(){
       limpiarCampos();
       addToList(nom,x,y,z);
       var v=new vector(nom,x,y,z);
+
       vectores.push(v);
-      console.log(vectores);
     }
 }
 
@@ -83,58 +94,65 @@ function addToList(nom,x,y,z) {
 }
 
 function addToOperacion(id) {
- let chips = document.getElementById('chips');
- let div = document.createElement('div');
- let flag=false;
-  if(('a' <= id && id <= 'z') || ('A' <= id && id <= 'Z')){
+    let chips = document.getElementById('chips');
+    let div = document.createElement('div');
+    let flag=false;
+    if(('a' <= id && id <= 'z') || ('A' <= id && id <= 'Z')){
       flag=true;
-  }
- if (!flag) {
-   div.className = 'chip red';
- }else {
-   div.className = 'chip teal lighten-4';
- }
- div.name = 'vector';
- div.appendChild(document.createTextNode(id));
- chips.appendChild(div);
-
+    }
+    if (!flag) {
+      div.className = 'chip red';
+    }else {
+      div.className = 'chip teal lighten-4';
+      IDS.push(id);
+    }
+    div.name = 'vector';
+    div.appendChild(document.createTextNode(id));
+    chips.appendChild(div);
  //drawVector(vectores[0].x,vectores[0].y);
 }
 
 function resolver() {
-  let operacion=document.getElementsByClassName('chip');
-  let a;
-  let b;
-  for (let i = 0; i < operacion.length; i++) {
-    for (let k = 0; k < vectores.length; k++) {
-      if (vectores[k].nom==operacion[i].innerHTML) {
-        if (a!=null) {
-          b=vectores[k];
-        }else{
-          a=vectores[k];
+    let operacion=document.getElementsByClassName('chip');
+    let a;
+    let b;
+    for (let i = 0; i < operacion.length; i++) {
+      for (let k = 0; k < vectores.length; k++) {
+        if (vectores[k].nom==operacion[i].innerHTML) {
+          if (a!=null) {
+            b=vectores[k];
+          }else{
+            a=vectores[k];
+          }
         }
       }
     }
-  }
-  switch (operacion[1].innerHTML) {
-    case '+':
-      suma(a,b);
-      break;
-    case '–':
-      resta(a,b);
-      break;
-    case '•':
-      prodP(a,b);
-      break;
-    case '✖':
-      prodC(a,b);
-      break;
-    case '| |':
-      norma(a);
-      break;
-    default:break;
-  }
-
+    switch (operacion[1].innerHTML) {
+      case '+':
+        suma(a,b);
+        resultado=true;
+        break;
+      case '–':
+        resta(a,b);
+        resultado=true;
+        break;
+      case '•':
+        prodP(a,b);
+        break;
+      case '✖':
+        prodC(a,b);
+        break;
+      case '| |':
+        norma(a);
+        break;
+      default:break;
+    }
+    if (resultado) {
+      let element = document.getElementById("plano");
+      element.classList.remove("disabled");
+      element = document.getElementById("res");
+      element.style.display='block';
+    }
   //console.log(x+" "+y+" "+z);
 }
 
@@ -143,6 +161,7 @@ function suma(a,b) {
   let y=a.y+b.y;
   let z=a.z+b.z;
 
+  r = new vector('r',x,y,z);
   let inn=document.getElementById('procedimiento');
   inn.innerHTML = a.nom+" + "+b.nom+"  =  < ("+a.x+" + "+b.x+"), ("+a.y+" + "+b.y+"), ("+a.z+" + "+b.z+") >   =   "+"< "+x+", "+y+", "+z+" >";
 }
@@ -218,4 +237,34 @@ function refresh() {
   while (det.hasChildNodes()) {
     det.removeChild(det.firstChild);
   }
+  resultado=false;
+  let element = document.getElementById("plano");
+  element.classList.add("disabled");
+  let proced = document.getElementById('proced');
+  let plano = document.getElementById('canvas');
+  proced.style.display = 'block';
+  plano.style.display = 'none';
+  IDS = [];
+  let res = document.getElementById("res");
+  res.style.display='none';
+}
+
+function showPlane() {
+  let proced = document.getElementById('proced');
+  let plano = document.getElementById('canvas');
+  if(proced.style.display == 'block'){
+    proced.style.display = 'none';
+    plano.style.display = 'block';
+  }else{
+    proced.style.display = 'block';
+    plano.style.display = 'none';
+  }
+}
+
+function addRes() {
+  let element = document.getElementById("res");
+  element.style.display='none';
+  s = IDS[0]+"+"+IDS[1];
+  addToList(s,r.x,r.y,r.z);
+  vectores.push(new vector(s,r.x,r.y,r.z));
 }
